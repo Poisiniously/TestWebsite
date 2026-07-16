@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber-Glass UI Showcase</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="cyberpunk.css">
+    
+    <style>
+        /* Ergänzung der unvollständigen Farbvariablen aus dem :root-Selektor deiner CSS-Datei.
+          Damit die importierten Klassen wie (.glass-card, .btn-pink, etc.) korrekt leuchten.
+        */
+        :root {
+            --bg-main: #0a040f; /* [cite: 5] */
+            --bg-panel: #160b22; /* [cite: 6] */
+            --glass-base: rgba(22, 11, 34, 0.6);
+            --glass-heavy: rgba(10, 4, 15, 0.85);
+            --glass-frosted: rgba(255, 255, 255, 0.03);
+            
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.15);
+            --border-glow: rgba(176, 38, 255, 0.3);
+            
+            --text-primary: #f3ecff;
+            --text-secondary: #a592c5;
+            
+            --accent-pink: #ff007f;
+            --accent-pink-hover: #ff3399;
+            --accent-cyan: #00f0ff;
+            --accent-purple: #b026ff;
+            --accent-green: #00ff66;
+            --accent-orange: #ff3c00;
+            
+            --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --glow-purple: 0 0 15px rgba(176, 38, 255, 0.5);
+            --btn-dark-bg: #1f0f33;
+        }
+
+        /* Hilfsklassen für das Layout-Gerüst */
+        .section-title {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            color: var(--accent-cyan);
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="utility-wrapper"> <header class="glass-card glass-card-holo animate-float"> <h1 class="title-main text-glitch" data-text="CYBER-GLASS UI">CYBER-GLASS UI</h1> <p class="subtitle">Modulares Steuerungs-Terminal & Interface-Übersicht</p> <div class="flex-row" style="justify-content: center;"> <span class="badge badge-pro">v2.0 Extended</span> <span class="badge badge-beta">Beta-Core</span> <span class="badge badge-new">Live</span> </div>
+        </header>
+
+        <section class="flex-col"> <div class="alert alert-success"> <span class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></span> <span><strong>Verbindung gesichert:</strong> Verschlüsseltes UI-Protokoll erfolgreich initialisiert.</span>
+            </div>
+        </section>
+
+        <div class="grid-2"> <main class="glass-card glass-card-purple glass-card-interactive flex-col"> <h3 class="section-title">Daten-Injektor</h3>
+                
+                <div class="flex-col"> <label class="font-mono" style="font-size: 0.8rem;">NETRUNNER-ID</label> <input type="text" class="input-glass" placeholder="z.B. Alice_0x7F"> </div>
+
+                <div class="flex-col"> <label class="font-mono" style="font-size: 0.8rem;">ZUGANGS-PROGNOSE</label> <select class="select-glass"> <option>Priorität: Standard</option>
+                        <option>Priorität: Corporate</option>
+                        <option>Priorität: Overdrive</option>
+                    </select>
+                </div>
+
+                <div class="flex-col"> <label class="font-mono" style="font-size: 0.8rem;">KRYPTO-SIGNATUR</label> <textarea class="textarea-glass textarea-mono" placeholder="Geben Sie Ihren Signaturschlüssel ein..."></textarea> </div>
+
+                <div class="flex-row" style="justify-content: space-between;"> <span class="font-mono" style="font-size: 0.85rem; color: var(--text-secondary);">STEUERUNGS-LINK SYNCHRONISIEREN</span>
+                    <label class="switch"> <input type="checkbox" checked>
+                        <span class="slider"></span> </label>
+                </div>
+            </main>
+
+            <aside class="flex-col"> <div class="glass-card glass-card-pink flex-col"> <h3 class="section-title">Pink Sub-Sector</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                        Modul-Zuweisung über <span class="text-gradient-pink">Neon-Frequenzen</span> möglich. </p>
+                    <div class="flex-row"> <button class="btn btn-pink">Senden</button> <button class="btn btn-outline-pink">Reset</button> </div>
+                </div>
+
+                <div class="glass-card glass-card-cyan flex-col"> <h3 class="section-title">Cyan Core</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                        Erweiterte Analyse über <span class="text-neon-cyan">Knotenpunkte</span>. </p>
+                    <div class="flex-row"> <button class="btn btn-outline-cyan">Verbinden</button> <button class="btn btn-gradient">Übermitteln</button> </div>
+                </div>
+
+            </aside>
+        </div>
+
+        <section class="glass-card glass-panel-frosted flex-col animate-pulse"> <h3 class="section-title">Systemintegrität</h3>
+            
+            <div class="grid-3"> <div class="flex-col" style="gap: 8px;"> <span class="font-mono" style="font-size: 0.75rem; color: var(--text-secondary);">KRYPTO-DECODER</span> <div class="progress-container"> <div class="progress-bar" style="width: 75%;"></div> </div>
+                </div>
+                
+                <div class="flex-col" style="gap: 8px;"> <span class="font-mono" style="font-size: 0.75rem; color: var(--text-secondary);">BANDBREITEN-LIMIT</span> <input type="range" class="range-glass" min="1" max="100" value="68"> </div>
+
+                <div class="flex-col" style="gap: 8px;"> <span class="font-mono" style="font-size: 0.75rem; color: var(--text-secondary);">NETZWERKSTATUS</span> <div class="flex-row" style="gap: 10px;"> <span class="spinner"></span> <span class="text-gradient-purple" style="font-size: 0.9rem; font-weight: 600;">Scanne Ports...</span> </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning" style="margin-bottom: 0; margin-top: 10px;"> <span><strong>Achtung:</strong> Die Matrix synchronisiert asynchron. Ladezeit kann variieren.</span>
+            </div>
+        </section>
+
+        <footer class="flex-row" style="justify-content: space-between; padding: 10px 0;"> <p class="font-mono" style="font-size: 0.8rem; color: var(--text-secondary);">// OFFLINE TERMINAL ENABLED</p> <button class="btn btn-purple" disabled>Sicherheits-Lock</button> </footer>
+
+    </div>
+
+</body>
+</html>
