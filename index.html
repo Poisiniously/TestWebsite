@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netrunner Terminal - Cyber-Arcade</title>
+    <title>Netrunner Arcade Hub - OS v2.0</title>
     
     <link rel="stylesheet" href="cyberpunk.css">
     
@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* CSS Fallback-Variablen passend zu deinem Stylesheet */
+        /* Fallback-Variablen passend zu deinem Stylesheet */
         :root {
             --bg-main: #0a040f;
             --bg-panel: #160b22;
@@ -33,14 +33,27 @@
             --accent-orange: #ff3c00;
         }
 
-        /* --- STYLING BREACH PROTOCOL GAME --- */
+        /* Arcade Grid Layout */
+        .arcade-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .arcade-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- GAME 1: BREACH PROTOCOL --- */
         .breach-matrix {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 8px;
             margin-top: 15px;
         }
-
         .matrix-cell {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-subtle);
@@ -53,28 +66,23 @@
             border-radius: 4px;
             transition: all 0.2s;
         }
-
-        /* Zeigt an, welche Zellen gerade auswählbar sind (Zeile oder Spalte) */
         .matrix-cell.active-line {
             border-color: var(--accent-cyan);
             color: var(--accent-cyan);
             background: rgba(0, 240, 255, 0.05);
             box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
         }
-
         .matrix-cell:hover.active-line {
             background: var(--accent-cyan);
             color: #000;
             box-shadow: 0 0 15px var(--accent-cyan);
         }
-
         .matrix-cell.used {
             opacity: 0.2;
             cursor: not-allowed;
             background: transparent;
             border-color: transparent;
         }
-
         .sequence-display {
             background: rgba(0, 0, 0, 0.3);
             padding: 8px;
@@ -84,14 +92,13 @@
             border: 1px dashed var(--border-subtle);
         }
 
-        /* --- STYLING SIMON-SAYS NODE GAME --- */
+        /* --- GAME 2: SIMON SAYS --- */
         .node-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 10px;
             margin-top: 15px;
         }
-
         .node-btn {
             aspect-ratio: 1;
             background: rgba(255, 255, 255, 0.03);
@@ -101,7 +108,6 @@
             transition: all 0.3s;
             position: relative;
         }
-
         .node-btn::after {
             content: '';
             position: absolute;
@@ -110,20 +116,47 @@
             background: rgba(176, 38, 255, 0.1);
             transition: all 0.3s;
         }
-
-        /* Aktive Leuchtzustände für das Simon Says */
         .node-btn.active::after {
             background: var(--accent-pink) !important;
             box-shadow: 0 0 20px var(--accent-pink);
         }
-        
         .node-btn.player-active::after {
             background: var(--accent-cyan) !important;
             box-shadow: 0 0 20px var(--accent-cyan);
         }
 
-        .node-btn:hover {
-            border-color: var(--accent-purple);
+        /* --- GAME 3 & 4 CANVAS BOXES --- */
+        .canvas-container {
+            position: relative;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-strong);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            display: block;
+            background: #06020a;
+            max-width: 100%;
+        }
+        .canvas-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 4, 15, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+        .canvas-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -133,51 +166,43 @@
         
         <header class="glass-card glass-card-holo animate-float">
             <h1 class="title-main text-glitch" data-text="NETRUNNER_ARCADE.OS">NETRUNNER_ARCADE.OS</h1>
-            <p class="subtitle font-mono">System Status: Neural Bridge Established // Games Loaded</p>
+            <p class="subtitle font-mono">System Core: Decryption Modules Active // Mainframe Infiltration Suite</p>
             <div class="flex-row" style="justify-content: center; gap: 10px; margin-top: 10px;">
-                <span class="badge badge-pro">Hacking-Matrix: Online</span>
-                <span class="badge badge-beta">Firewall Bypass: Active</span>
+                <span class="badge badge-pro">Cyber-Arcade: Online</span>
+                <span class="badge badge-new">V4.0 Arcade Core Loaded</span>
             </div>
         </header>
 
-        <section class="grid-2">
+        <main class="arcade-grid">
             
             <div class="glass-card glass-card-cyan" id="breach-card">
                 <div class="flex-row" style="justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h2 class="text-gradient-cyan font-mono" style="margin: 0;"><i class="fa-solid fa-terminal"></i> Breach Protocol</h2>
+                    <h2 class="text-gradient-cyan font-mono" style="margin: 0;"><i class="fa-solid fa-terminal"></i> 1. Breach Protocol</h2>
                     <span class="badge badge-new" id="breach-timer">Versuche: 4</span>
                 </div>
-                
                 <p style="color: var(--text-secondary); font-size: 0.85rem;">
-                    Bewege dich abwechselnd horizontal (Start in Zeile 1) und vertikal. Rekonstruiere den Ziel-Code!
+                    Bewege dich abwechselnd horizontal (Start: Reihe 1) und vertikal. Finde die Zielsequenz!
                 </p>
-
                 <div class="flex-col" style="gap: 8px; margin-top: 12px;">
-                    <div style="font-size: 0.8rem; color: var(--text-secondary);">ZIEL-REIHENFOLGE:</div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">ZIEL:</div>
                     <div class="sequence-display font-mono text-neon-cyan" id="target-sequence">55 &gt; E9 &gt; BD</div>
-                    
-                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">DEIN BUFFER:</div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">BUFFER:</div>
                     <div class="sequence-display font-mono text-neon-pink" id="buffer-sequence">-- &gt; -- &gt; --</div>
                 </div>
-
-                <div class="breach-matrix" id="matrix-grid">
-                    </div>
-
-                <button class="btn btn-outline-pink" style="margin-top: 15px; width: 100%;" onclick="initBreachGame()">
-                    <span>Matrix neu generieren</span>
+                <div class="breach-matrix" id="matrix-grid"></div>
+                <button class="btn btn-outline-cyan" style="margin-top: 15px; width: 100%;" onclick="initBreachGame()">
+                    <span>Matrix regenerieren</span>
                 </button>
             </div>
 
             <div class="glass-card glass-card-purple" id="simon-card">
                 <div class="flex-row" style="justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h2 class="text-gradient-purple font-mono" style="margin: 0;"><i class="fa-solid fa-network-wired"></i> Node Decryption</h2>
+                    <h2 class="text-gradient-purple font-mono" style="margin: 0;"><i class="fa-solid fa-network-wired"></i> 2. Node Decryption</h2>
                     <span class="badge badge-pro" id="simon-score">Score: 0</span>
                 </div>
-
                 <p style="color: var(--text-secondary); font-size: 0.85rem;">
-                    Merke dir das Leuchtmuster der Nodes und klicke sie in derselben Reihenfolge an, um die Firewall zu überlasten.
+                    Merke dir das Signalmuster der Nodes und hacke sie in derselben Reihenfolge ab.
                 </p>
-
                 <div class="node-grid">
                     <button class="node-btn" data-node="0" onclick="playerNodeClick(0)"></button>
                     <button class="node-btn" data-node="1" onclick="playerNodeClick(1)"></button>
@@ -189,17 +214,50 @@
                     <button class="node-btn" data-node="7" onclick="playerNodeClick(7)"></button>
                     <button class="node-btn" data-node="8" onclick="playerNodeClick(8)"></button>
                 </div>
-
                 <button class="btn btn-purple" style="margin-top: 15px; width: 100%;" onclick="startSimonGame()">
-                    <span>Firewall-Bypass starten</span>
+                    <span>Bypass starten</span>
                 </button>
             </div>
 
-        </section>
+            <div class="glass-card glass-card-cyan" id="runner-card">
+                <div class="flex-row" style="justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h2 class="text-gradient-cyan font-mono" style="margin: 0;"><i class="fa-solid fa-microchip"></i> 3. Grid-Runner</h2>
+                    <span class="badge badge-beta" id="runner-score">Length: 1</span>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem;">
+                    Steuere den Datenstrom mit den Pfeiltasten [↑, ↓, ←, →]. Lade Core-Datenpakete (Cyan) auf!
+                </p>
+                <div class="canvas-container">
+                    <div class="canvas-overlay" id="runner-overlay">
+                        <span class="text-neon-cyan font-mono" style="font-size: 1.2rem;">Core Data Stream</span>
+                        <button class="btn btn-cyan" onclick="startRunnerGame()"><span>System booten</span></button>
+                    </div>
+                    <canvas id="runner-canvas" width="300" height="300"></canvas>
+                </div>
+            </div>
 
-        <section class="glass-card" style="margin-top: 20px;">
-            <h3 class="font-mono text-neon-pink" style="font-size: 0.9rem; margin-bottom: 8px;">Netrunner Live Logs</h3>
-            <textarea id="arcade-logs" class="textarea-glass textarea-mono" style="height: 100px; font-size: 0.8rem;" readonly>/* Terminal initialisiert. Wähle ein Spiel, um Daten-Injektionen vorzunehmen... */</textarea>
+            <div class="glass-card glass-card-pink" id="defender-card">
+                <div class="flex-row" style="justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h2 class="text-gradient-pink font-mono" style="margin: 0;"><i class="fa-solid fa-shield-halved"></i> 4. Firewall Defender</h2>
+                    <span class="badge badge-new" id="defender-score">Kills: 0</span>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem;">
+                    Verteidige das Netz! [A/D] oder [←/→] bewegen, [Leertaste] schießen. Vernichte herabfallende Viren.
+                </p>
+                <div class="canvas-container">
+                    <div class="canvas-overlay" id="defender-overlay">
+                        <span class="text-neon-pink font-mono" style="font-size: 1.2rem;">Grid Firewall Intrusion</span>
+                        <button class="btn btn-pink" onclick="startDefenderGame()"><span>Defensive hochfahren</span></button>
+                    </div>
+                    <canvas id="defender-canvas" width="300" height="300"></canvas>
+                </div>
+            </div>
+
+        </main>
+
+        <section class="glass-card" style="margin-top: 25px;">
+            <h3 class="font-mono text-neon-pink" style="font-size: 0.9rem; margin-bottom: 8px;">Netrunner Terminal Logs</h3>
+            <textarea id="arcade-logs" class="textarea-glass textarea-mono" style="height: 110px; font-size: 0.8rem;" readonly>/* Terminal initialisiert. Wähle ein Spiel, um Daten-Injektionen vorzunehmen... */</textarea>
         </section>
 
     </div>
@@ -209,6 +267,8 @@
         let audioCtx = null;
         function playSfx(type) {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
             let osc = audioCtx.createOscillator();
             let gain = audioCtx.createGain();
             osc.connect(gain);
@@ -219,28 +279,42 @@
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(800, now);
                 osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
-                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.setValueAtTime(0.08, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
                 osc.start(now); osc.stop(now + 0.08);
             } else if (type === 'node') {
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(440, now);
-                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.setValueAtTime(0.1, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
                 osc.start(now); osc.stop(now + 0.25);
+            } else if (type === 'laser') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(900, now);
+                osc.frequency.exponentialRampToValueAtTime(150, now + 0.15);
+                gain.gain.setValueAtTime(0.06, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now); osc.stop(now + 0.15);
+            } else if (type === 'explosion') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(120, now);
+                osc.frequency.linearRampToValueAtTime(30, now + 0.3);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now); osc.stop(now + 0.3);
             } else if (type === 'success') {
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, now); // C5
-                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
-                osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
-                gain.gain.setValueAtTime(0.15, now);
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.1);
+                osc.frequency.setValueAtTime(783.99, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
                 osc.start(now); osc.stop(now + 0.45);
             } else if (type === 'fail') {
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(150, now);
                 osc.frequency.linearRampToValueAtTime(80, now + 0.4);
-                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.setValueAtTime(0.15, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
                 osc.start(now); osc.stop(now + 0.4);
             }
@@ -254,222 +328,7 @@
         }
 
         // ==========================================
-        // GAME 1: BREACH PROTOCOL GAME LOGIC
+        // GAME 1: BREACH PROTOCOL
         // ==========================================
         const breachMatrixData = [
             ['1C', '55', 'E9', 'BD'],
-            ['E9', '1C', '55', 'AA'],
-            ['BD', '55', 'AA', '1C'],
-            ['AA', 'BD', 'E9', '55']
-        ];
-        
-        let targetSequence = ['55', 'E9', 'BD'];
-        let playerBuffer = [];
-        let maxAttempts = 4;
-        let attemptsLeft = 4;
-        let selectedRow = 0; // Wir starten immer in der ersten Zeile (Index 0)
-        let selectionMode = 'horizontal'; // Wechselt zwischen 'horizontal' und 'vertical'
-        let usedCells = []; // Array von Indizes "row-col"
-
-        function initBreachGame() {
-            playerBuffer = [];
-            attemptsLeft = maxAttempts;
-            selectedRow = 0;
-            selectionMode = 'horizontal';
-            usedCells = [];
-            
-            // Zufällige Zielsequenz generieren aus den Matrix-Elementen
-            const pool = ['1C', '55', 'E9', 'BD', 'AA'];
-            targetSequence = Array.from({length: 3}, () => pool[Math.floor(Math.random() * pool.length)]);
-            
-            document.getElementById('target-sequence').innerText = targetSequence.join(' > ');
-            document.getElementById('buffer-sequence').innerText = '-- > -- > --';
-            document.getElementById('breach-timer').innerText = `Versuche: ${attemptsLeft}`;
-            document.getElementById('breach-timer').className = "badge badge-new";
-
-            renderMatrix();
-            logEvent("BREACH PROTOCOL: Neues Hacking-Feld generiert. Starte in Zeile 1.");
-        }
-
-        function renderMatrix() {
-            const grid = document.getElementById('matrix-grid');
-            grid.innerHTML = '';
-
-            for (let r = 0; r < 4; r++) {
-                for (let c = 0; c < 4; c++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'matrix-cell';
-                    cell.innerText = breachMatrixData[r][c];
-                    
-                    const cellId = `${r}-${c}`;
-                    const isUsed = usedCells.includes(cellId);
-
-                    // Markiere genutzte Zellen
-                    if (isUsed) {
-                        cell.classList.add('used');
-                    } else {
-                        // Markiere Zellen, die gerade aktiv wählbar sind
-                        if (selectionMode === 'horizontal' && r === selectedRow) {
-                            cell.classList.add('active-line');
-                        } else if (selectionMode === 'vertical' && c === selectedRow) { // "selectedRow" hält im vertikalen Modus die ausgewählte Spalte
-                            cell.classList.add('active-line');
-                        }
-                    }
-
-                    cell.onclick = () => {
-                        if (isUsed) return;
-                        
-                        // Nur erlauben, wenn die Zelle zur aktuellen Zeile/Spalte gehört
-                        if (selectionMode === 'horizontal' && r === selectedRow) {
-                            selectCell(r, c);
-                        } else if (selectionMode === 'vertical' && c === selectedRow) {
-                            selectCell(r, c);
-                        }
-                    };
-
-                    grid.appendChild(cell);
-                }
-            }
-        }
-
-        function selectCell(r, c) {
-            playSfx('click');
-            const val = breachMatrixData[r][c];
-            playerBuffer.push(val);
-            usedCells.push(`${r}-${c}`);
-
-            // Buffer-Visualisierung aktualisieren
-            let visualBuffer = [...playerBuffer];
-            while (visualBuffer.length < 3) visualBuffer.push('--');
-            document.getElementById('buffer-sequence').innerText = visualBuffer.join(' > ');
-
-            attemptsLeft--;
-            document.getElementById('breach-timer').innerText = `Versuche: ${attemptsLeft}`;
-
-            // Ziel erreicht überprüfen
-            const isMatch = playerBuffer.every((v, i) => v === targetSequence[i]);
-
-            if (playerBuffer.length === 3) {
-                if (isMatch) {
-                    playSfx('success');
-                    logEvent("BREACH ERFOLGREICH! Daten-Integrität kompromittiert.");
-                    document.getElementById('breach-timer').innerText = "SYSTEM CRACKED";
-                    document.getElementById('breach-timer').className = "badge badge-pro";
-                } else {
-                    playSfx('fail');
-                    logEvent("BREACH FEHLGESCHLAGEN: Code-Muster ungültig.");
-                    document.getElementById('breach-timer').innerText = "TIMEOUT/FAIL";
-                }
-                // Sperre Matrix nach Ende des Spiels
-                selectionMode = 'none';
-                renderMatrix();
-                return;
-            }
-
-            if (attemptsLeft === 0) {
-                playSfx('fail');
-                logEvent("BREACH FEHLGESCHLAGEN: Keine Versuche übrig.");
-                selectionMode = 'none';
-                renderMatrix();
-                return;
-            }
-
-            // Modus für den nächsten Schritt wechseln und Koordinaten anpassen
-            if (selectionMode === 'horizontal') {
-                selectionMode = 'vertical';
-                selectedRow = c; // Im vertikalen Modus ist das nächste Ziel die Spalte c
-                logEvent(`Spalten-Wahl aktiviert. Wähle aus Spalte ${c+1}.`);
-            } else {
-                selectionMode = 'horizontal';
-                selectedRow = r; // Im horizontalen Modus ist das nächste Ziel die Zeile r
-                logEvent(`Zeilen-Wahl aktiviert. Wähle aus Zeile ${r+1}.`);
-            }
-
-            renderMatrix();
-        }
-
-        // ==========================================
-        // GAME 2: SIMON SAYS / NODE DECRYPTION LOGIC
-        // ==========================================
-        let simonSequence = [];
-        let playerSequence = [];
-        let simonScore = 0;
-        let isCpuPlaying = false;
-
-        function startSimonGame() {
-            simonSequence = [];
-            playerSequence = [];
-            simonScore = 0;
-            document.getElementById('simon-score').innerText = `Score: ${simonScore}`;
-            logEvent("NODE DECRYPTION: Firewall gestartet. Sequenz wird initialisiert...");
-            nextSimonRound();
-        }
-
-        function nextSimonRound() {
-            playerSequence = [];
-            // Zufälligen Node (0 bis 8) hinzufügen
-            simonSequence.push(Math.floor(Math.random() * 9));
-            playSequence();
-        }
-
-        function playSequence() {
-            isCpuPlaying = true;
-            let i = 0;
-            const interval = setInterval(() => {
-                flashNode(simonSequence[i], 'active');
-                i++;
-                if (i >= simonSequence.length) {
-                    clearInterval(interval);
-                    isCpuPlaying = false;
-                    logEvent("Wiederhole das Muster...");
-                }
-            }, 600);
-        }
-
-        function flashNode(index, cssClass) {
-            const btn = document.querySelector(`[data-node="${index}"]`);
-            if (btn) {
-                btn.classList.add(cssClass);
-                playSfx('node');
-                setTimeout(() => {
-                    btn.classList.remove(cssClass);
-                }, 350);
-            }
-        }
-
-        function playerNodeClick(index) {
-            if (isCpuPlaying) return; // Verhindere Eingaben, während der Computer vorspielt
-
-            flashNode(index, 'player-active');
-            playerSequence.push(index);
-
-            // Sofortige Prüfung bei jedem Klick
-            const currentIndex = playerSequence.length - 1;
-            if (playerSequence[currentIndex] !== simonSequence[currentIndex]) {
-                playSfx('fail');
-                logEvent(`FIREWALL BLOCK: Fehlerhafter Node bei Schritt ${playerSequence.length}!`);
-                document.getElementById('simon-score').innerText = "BLOCKED";
-                simonSequence = [];
-                return;
-            }
-
-            // Runde erfolgreich beendet?
-            if (playerSequence.length === simonSequence.length) {
-                simonScore++;
-                document.getElementById('simon-score').innerText = `Score: ${simonScore}`;
-                playSfx('success');
-                logEvent(`Sub-Sektor ${simonScore} entschlüsselt. Erhöhe Frequenz.`);
-                
-                setTimeout(() => {
-                    nextSimonRound();
-                }, 1000);
-            }
-        }
-
-        // Spiele beim Laden der Seite initialisieren
-        window.onload = () => {
-            initBreachGame();
-        }
-    </script>
-</body>
-</html>
