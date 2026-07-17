@@ -1,116 +1,203 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber-Glass UI Showcase</title>
+    <title>Cyber-Glass UI Hub</title>
     
+    <link rel="stylesheet" href="Copied text 1784199193.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="cyberpunk.css">
-    
+
     <style>
-        /* Ergänzung der unvollständigen Farbvariablen aus dem :root-Selektor deiner CSS-Datei.
-          Damit die importierten Klassen wie (.glass-card, .btn-pink, etc.) korrekt leuchten.
-        */
+        /* Fallback :root definitions as variables were truncated in the original CSS */
         :root {
-            --bg-main: #0a040f; /* [cite: 5] */
-            --bg-panel: #160b22; /* [cite: 6] */
-            --glass-base: rgba(22, 11, 34, 0.6);
+            --bg-main: #0a040f;
+            --bg-panel: #160b22;
+            --glass-base: rgba(22, 11, 34, 0.4);
             --glass-heavy: rgba(10, 4, 15, 0.85);
             --glass-frosted: rgba(255, 255, 255, 0.03);
-            
             --border-subtle: rgba(255, 255, 255, 0.08);
             --border-strong: rgba(255, 255, 255, 0.15);
             --border-glow: rgba(176, 38, 255, 0.3);
-            
-            --text-primary: #f3ecff;
-            --text-secondary: #a592c5;
-            
+            --text-primary: #f1ecf7;
+            --text-secondary: #9d8db2;
             --accent-pink: #ff007f;
             --accent-pink-hover: #ff3399;
             --accent-cyan: #00f0ff;
             --accent-purple: #b026ff;
             --accent-green: #00ff66;
             --accent-orange: #ff3c00;
-            
+            --btn-dark-bg: #1f1230;
             --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            --glow-purple: 0 0 15px rgba(176, 38, 255, 0.5);
-            --btn-dark-bg: #1f0f33;
-        }
-
-        /* Hilfsklassen für das Layout-Gerüst */
-        .section-title {
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-            color: var(--accent-cyan);
-            border-bottom: 1px solid var(--border-subtle);
-            padding-bottom: 8px;
+            --glow-purple: 0 0 15px rgba(176, 38, 255, 0.4);
         }
     </style>
 </head>
 <body>
 
-    <div class="utility-wrapper"> <header class="glass-card glass-card-holo animate-float"> <h1 class="title-main text-glitch" data-text="CYBER-GLASS UI">CYBER-GLASS UI</h1> <p class="subtitle">Modulares Steuerungs-Terminal & Interface-Übersicht</p> <div class="flex-row" style="justify-content: center;"> <span class="badge badge-pro">v2.0 Extended</span> <span class="badge badge-beta">Beta-Core</span> <span class="badge badge-new">Live</span> </div>
+    <div class="utility-wrapper">
+        
+        <header class="glass-card glass-card-holo animate-float">
+            <h1 class="title-main text-glitch" data-text="NEURAL_NET.OS">NEURAL_NET.OS</h1>
+            <p class="subtitle font-mono">Status: Connected // Security Level: Maximum</p>
+            
+            <div class="flex-row" style="justify-content: center; flex-wrap: wrap;">
+                <span class="badge badge-pro">Enterprise</span>
+                <span class="badge badge-beta">v2.0-Beta</span>
+                <span class="badge badge-new">New Release</span>
+            </div>
         </header>
 
-        <section class="flex-col"> <div class="alert alert-success"> <span class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></span> <span><strong>Verbindung gesichert:</strong> Verschlüsseltes UI-Protokoll erfolgreich initialisiert.</span>
+        <section class="flex-col">
+            <div class="alert alert-info">
+                <div class="spinner"></div>
+                <span><strong>System Status:</strong> Core database synchronizing with quantum servers.</span>
             </div>
-        </section>
-
-        <div class="grid-2"> <main class="glass-card glass-card-purple glass-card-interactive flex-col"> <h3 class="section-title">Daten-Injektor</h3>
-                
-                <div class="flex-col"> <label class="font-mono" style="font-size: 0.8rem;">NETRUNNER-ID</label> <input type="text" class="input-glass" placeholder="z.B. Alice_0x7F"> </div>
-
-                <div class="flex-col"> <label class="font-mono" style="font-size: 0.8rem;">ZUGANGS-PROGNOSE</label> <select class="select-glass"> <option>Priorität: Standard</option>
-                        <option>Priorität: Corporate</option>
-                        <option>Priorität: Overdrive</option>
-                    </select>
-                </div>
-
-                <div class="flex-col"> <label class="font-mono" style="font-size: 0.8rem;">KRYPTO-SIGNATUR</label> <textarea class="textarea-glass textarea-mono" placeholder="Geben Sie Ihren Signaturschlüssel ein..."></textarea> </div>
-
-                <div class="flex-row" style="justify-content: space-between;"> <span class="font-mono" style="font-size: 0.85rem; color: var(--text-secondary);">STEUERUNGS-LINK SYNCHRONISIEREN</span>
-                    <label class="switch"> <input type="checkbox" checked>
-                        <span class="slider"></span> </label>
-                </div>
-            </main>
-
-            <aside class="flex-col"> <div class="glass-card glass-card-pink flex-col"> <h3 class="section-title">Pink Sub-Sector</h3>
-                    <p style="color: var(--text-secondary); font-size: 0.95rem;">
-                        Modul-Zuweisung über <span class="text-gradient-pink">Neon-Frequenzen</span> möglich. </p>
-                    <div class="flex-row"> <button class="btn btn-pink">Senden</button> <button class="btn btn-outline-pink">Reset</button> </div>
-                </div>
-
-                <div class="glass-card glass-card-cyan flex-col"> <h3 class="section-title">Cyan Core</h3>
-                    <p style="color: var(--text-secondary); font-size: 0.95rem;">
-                        Erweiterte Analyse über <span class="text-neon-cyan">Knotenpunkte</span>. </p>
-                    <div class="flex-row"> <button class="btn btn-outline-cyan">Verbinden</button> <button class="btn btn-gradient">Übermitteln</button> </div>
-                </div>
-
-            </aside>
-        </div>
-
-        <section class="glass-card glass-panel-frosted flex-col animate-pulse"> <h3 class="section-title">Systemintegrität</h3>
             
-            <div class="grid-3"> <div class="flex-col" style="gap: 8px;"> <span class="font-mono" style="font-size: 0.75rem; color: var(--text-secondary);">KRYPTO-DECODER</span> <div class="progress-container"> <div class="progress-bar" style="width: 75%;"></div> </div>
-                </div>
-                
-                <div class="flex-col" style="gap: 8px;"> <span class="font-mono" style="font-size: 0.75rem; color: var(--text-secondary);">BANDBREITEN-LIMIT</span> <input type="range" class="range-glass" min="1" max="100" value="68"> </div>
-
-                <div class="flex-col" style="gap: 8px;"> <span class="font-mono" style="font-size: 0.75rem; color: var(--text-secondary);">NETZWERKSTATUS</span> <div class="flex-row" style="gap: 10px;"> <span class="spinner"></span> <span class="text-gradient-purple" style="font-size: 0.9rem; font-weight: 600;">Scanne Ports...</span> </div>
-                </div>
+            <div class="alert alert-success">
+                <i class="fa-solid fa-circle-check"></i>
+                <span><strong>Firewall Active:</strong> Intrusions blocked. Decryption keys updated successfully.</span>
             </div>
-
-            <div class="alert alert-warning" style="margin-bottom: 0; margin-top: 10px;"> <span><strong>Achtung:</strong> Die Matrix synchronisiert asynchron. Ladezeit kann variieren.</span>
+            
+            <div class="alert alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span><strong>Warning:</strong> High memory consumption detected on sub-sector 4.</span>
             </div>
         </section>
 
-        <footer class="flex-row" style="justify-content: space-between; padding: 10px 0;"> <p class="font-mono" style="font-size: 0.8rem; color: var(--text-secondary);">// OFFLINE TERMINAL ENABLED</p> <button class="btn btn-purple" disabled>Sicherheits-Lock</button> </footer>
+        <section class="grid-3">
+            <div class="glass-card glass-card-pink glass-card-interactive">
+                <h3 class="text-gradient-pink font-mono" style="margin-bottom: 12px;">Sector A</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
+                    Dedicated terminal for monitoring thermal dynamics of localized fusion arrays.
+                </p>
+                <button class="btn btn-pink" style="width: 100%;">
+                    <span>Connect</span>
+                    <i class="fa-solid fa-bolt"></i>
+                </button>
+            </div>
+
+            <div class="glass-card glass-card-purple glass-card-interactive animate-pulse">
+                <h3 class="text-gradient-purple font-mono" style="margin-bottom: 12px;">Sector B</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
+                    Active proxy tunneling. Routing neural nodes to bypass corporate sensory firewalls.
+                </p>
+                <button class="btn btn-purple" style="width: 100%;">
+                    <span>Execute</span>
+                    <i class="fa-solid fa-terminal"></i>
+                </button>
+            </div>
+
+            <div class="glass-card glass-card-cyan glass-card-interactive">
+                <h3 class="text-gradient-cyan font-mono" style="margin-bottom: 12px;">Sector C</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
+                    Cold storage terminal archiving encrypted system logs and ledger registries.
+                </p>
+                <button class="btn btn-outline-cyan" style="width: 100%;">
+                    <span>Query DB</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="grid-2">
+            
+            <div class="glass-card">
+                <h2 class="text-gradient-purple" style="margin-bottom: 24px; font-weight: 600;">System Overrides</h2>
+                
+                <form class="flex-col" onsubmit="event.preventDefault();">
+                    <div>
+                        <label class="font-mono" style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.85rem;">TARGET CORE SELECT</label>
+                        <select class="select-glass">
+                            <option value="mainframe">Mainframe Hub Alpha</option>
+                            <option value="subgrid">Sub-Grid Relay Beta</option>
+                            <option value="orbital">Orbital Platform Gamma</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="font-mono" style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.85rem;">ENCRYPTION PHRASE</label>
+                        <input type="text" class="input-glass" placeholder="Enter secure string...">
+                    </div>
+
+                    <div>
+                        <label class="font-mono" style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.85rem;">COMPILED SHELL INSTRUCTIONS</label>
+                        <textarea class="textarea-glass textarea-mono" placeholder="/* Custom shell scripting environment */&#10;sudo execute-net-run --bypass --target=0x0F29"></textarea>
+                    </div>
+
+                    <div class="flex-row" style="justify-content: space-between;">
+                        <button type="submit" class="btn btn-gradient">
+                            <span>Initialize Routine</span>
+                        </button>
+                        <button type="reset" class="btn btn-outline-pink">
+                            <span>Purge Logs</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="glass-card flex-col" style="justify-content: space-between;">
+                <div>
+                    <h2 class="text-neon-cyan" style="margin-bottom: 15px; font-weight: 600;">Neural Analytics</h2>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 24px;">
+                        Live interactive data parameters processing current terminal load metrics.
+                    </p>
+                </div>
+
+                <div class="glass-panel-frosted flex-col">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="font-mono" style="font-size: 0.85rem;">PROXY BANDWIDTH</span>
+                        <span class="text-neon-pink font-mono" id="bandwidth-val" style="font-size: 0.85rem; font-weight: bold;">75%</span>
+                    </div>
+                    <input type="range" class="range-glass" min="0" max="100" value="75" id="bandwidth-slider">
+
+                    <div class="progress-container" style="margin-top: 10px;">
+                        <div class="progress-bar" id="bandwidth-progress" style="width: 75%;"></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel-frosted flex-row" style="justify-content: space-between;">
+                    <div class="flex-col" style="gap: 4px;">
+                        <span style="font-weight: 600; font-size: 0.95rem;">Stealth Cloaking</span>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Mask client routing protocols</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="flex-row" style="margin-top: 10px;">
+                    <button class="btn btn-pink" disabled>
+                        <i class="fa-solid fa-ban"></i>
+                        <span>System Locked</span>
+                    </button>
+                    <span style="color: var(--text-secondary); font-size: 0.8rem;">Override disabled by central command.</span>
+                </div>
+            </div>
+
+        </section>
+
+        <footer style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-secondary);" class="font-mono">
+            <p>&copy; 2026 CYBER-GLASS UI. LICENSED UNDER THE NET_RUNNER INITIATIVE.</p>
+        </footer>
 
     </div>
 
+    <script>
+        const slider = document.getElementById('bandwidth-slider');
+        const bar = document.getElementById('bandwidth-progress');
+        const text = document.getElementById('bandwidth-val');
+
+        slider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            bar.style.width = value + '%';
+            text.innerText = value + '%';
+        });
+    </script>
 </body>
 </html>
