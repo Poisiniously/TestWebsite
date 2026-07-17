@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neural Net OS - Cyberpunk Core</title>
+    <title>Netrunner Terminal - Cyber-Arcade</title>
     
     <link rel="stylesheet" href="cyberpunk.css">
     
@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Fallback-Variablen für das Styling */
+        /* CSS Fallback-Variablen passend zu deinem Stylesheet */
         :root {
             --bg-main: #0a040f;
             --bg-panel: #160b22;
@@ -27,594 +27,449 @@
             --text-primary: #f1ecf7;
             --text-secondary: #9d8db2;
             --accent-pink: #ff007f;
-            --accent-pink-hover: #ff3399;
             --accent-cyan: #00f0ff;
             --accent-purple: #b026ff;
             --accent-green: #00ff66;
             --accent-orange: #ff3c00;
-            --btn-dark-bg: #1f1230;
-            --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            --glow-purple: 0 0 15px rgba(176, 38, 255, 0.4);
         }
 
-        /* Screen Shake & Glitch im Notfallmodus */
-        .emergency-active {
-            animation: screen-shake 0.12s infinite alternate !important;
-            box-shadow: inset 0 0 120px rgba(255, 0, 127, 0.3) !important;
-        }
-        
-        .emergency-border {
-            border-color: var(--accent-pink) !important;
-            box-shadow: 0 0 30px rgba(255, 0, 127, 0.5) !important;
-        }
-
-        @keyframes screen-shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            100% { transform: translate(-1px, -2px) rotate(0.1deg); }
-        }
-
-        /* Live-Status-Header */
-        .live-stats {
-            display: flex;
-            gap: 15px;
-            font-size: 0.8rem;
-            margin-top: 10px;
-            color: var(--accent-cyan);
-        }
-
-        /* Hacking Mini-Game Grid */
-        .hack-grid {
+        /* --- STYLING BREACH PROTOCOL GAME --- */
+        .breach-matrix {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-top: 12px;
+            gap: 10px;
+            margin-top: 15px;
         }
 
-        .hack-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-strong);
-            color: var(--text-primary);
-            padding: 10px;
-            font-size: 0.9rem;
+        .matrix-cell {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 12px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.1rem;
             cursor: pointer;
             border-radius: 4px;
             transition: all 0.2s;
         }
 
-        .hack-btn:hover {
-            background: var(--accent-purple);
+        /* Zeigt an, welche Zellen gerade auswählbar sind (Zeile oder Spalte) */
+        .matrix-cell.active-line {
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 10px var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
         }
 
-        /* Keyboard Info Badge */
-        .keyboard-badge {
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px dashed var(--accent-cyan);
+        .matrix-cell:hover.active-line {
+            background: var(--accent-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent-cyan);
+        }
+
+        .matrix-cell.used {
+            opacity: 0.2;
+            cursor: not-allowed;
+            background: transparent;
+            border-color: transparent;
+        }
+
+        .sequence-display {
+            background: rgba(0, 0, 0, 0.3);
             padding: 8px;
-            font-size: 0.75rem;
             border-radius: 4px;
-            text-align: center;
+            font-family: monospace;
+            letter-spacing: 2px;
+            border: 1px dashed var(--border-subtle);
+        }
+
+        /* --- STYLING SIMON-SAYS NODE GAME --- */
+        .node-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
             margin-top: 15px;
+        }
+
+        .node-btn {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-strong);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .node-btn::after {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 6px;
+            background: rgba(176, 38, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        /* Aktive Leuchtzustände für das Simon Says */
+        .node-btn.active::after {
+            background: var(--accent-pink) !important;
+            box-shadow: 0 0 20px var(--accent-pink);
+        }
+        
+        .node-btn.player-active::after {
+            background: var(--accent-cyan) !important;
+            box-shadow: 0 0 20px var(--accent-cyan);
+        }
+
+        .node-btn:hover {
+            border-color: var(--accent-purple);
         }
     </style>
 </head>
 <body>
 
-    <div class="utility-wrapper" id="main-wrapper">
+    <div class="utility-wrapper">
         
-        <header class="glass-card glass-card-holo animate-float" id="main-header">
-            <h1 class="title-main text-glitch" data-text="NEURAL_NET.OS" id="header-title">NEURAL_NET.OS</h1>
-            <p class="subtitle font-mono" id="system-status-subtitle">Status: Linked // Decryption Keys: Armed</p>
-            
-            <div class="live-stats font-mono">
-                <span>CPU: <strong id="live-cpu">18.4%</strong></span>
-                <span>MEM: <strong id="live-mem">3.8 GB</strong></span>
-                <span>LATENCY: <strong id="live-ping">14ms</strong></span>
-            </div>
-
-            <div class="flex-row" style="justify-content: center; flex-wrap: wrap; margin-top: 15px;">
-                <span class="badge badge-pro">Cyber-Synth Enabled</span>
-                <span class="badge badge-beta" id="node-count-badge">Node Secure</span>
-                <span class="badge badge-new" style="cursor: pointer;" onclick="triggerSfx('click')">Interactive Decibels: Active</span>
+        <header class="glass-card glass-card-holo animate-float">
+            <h1 class="title-main text-glitch" data-text="NETRUNNER_ARCADE.OS">NETRUNNER_ARCADE.OS</h1>
+            <p class="subtitle font-mono">System Status: Neural Bridge Established // Games Loaded</p>
+            <div class="flex-row" style="justify-content: center; gap: 10px; margin-top: 10px;">
+                <span class="badge badge-pro">Hacking-Matrix: Online</span>
+                <span class="badge badge-beta">Firewall Bypass: Active</span>
             </div>
         </header>
 
-        <section class="flex-col" id="alert-container">
-            <div class="alert alert-info" id="sync-alert">
-                <div class="spinner"></div>
-                <span><strong>System Status:</strong> Core database synchronizing with quantum servers.</span>
-            </div>
-        </section>
-
-        <section class="grid-3">
-            <div class="glass-card glass-card-pink glass-card-interactive" id="card-sector-a">
-                <h3 class="text-gradient-pink font-mono" style="margin-bottom: 12px;">Sector A: Sub-Grid</h3>
-                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
-                    Dedicated terminal for monitoring thermal dynamics of localized fusion arrays.
-                </p>
-                <button class="btn btn-pink" style="width: 100%;" onclick="connectSector('Sector A', 'matrix loopback array')">
-                    <span>Connect Grid</span>
-                    <i class="fa-solid fa-bolt"></i>
-                </button>
-            </div>
-
-            <div class="glass-card glass-card-purple glass-card-interactive animate-pulse" id="card-sector-b">
-                <h3 class="text-gradient-purple font-mono" style="margin-bottom: 12px;">Sector B: Proxy</h3>
-                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
-                    Active proxy tunneling. Routing neural nodes to bypass corporate sensory firewalls.
-                </p>
-                <button class="btn btn-purple" style="width: 100%;" onclick="connectSector('Sector B', 'bypass node routing')">
-                    <span>Bypass Firewall</span>
-                    <i class="fa-solid fa-terminal"></i>
-                </button>
-            </div>
-
-            <div class="glass-card glass-card-cyan" id="card-game">
-                <h3 class="text-gradient-cyan font-mono" style="margin-bottom: 8px;">Breach Protocol</h3>
-                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">
-                    Target Code Sequence: <strong class="text-neon-cyan" style="letter-spacing: 2px;">55 > F0 > FF</strong>
-                </div>
-                <div style="font-size: 0.75rem; color: var(--text-primary);">
-                    Current Input: <span id="current-code-input" class="font-mono text-neon-pink" style="font-weight: bold;">--</span>
-                </div>
-                
-                <div class="hack-grid font-mono">
-                    <button class="hack-btn" onclick="playBreach('1C')">1C</button>
-                    <button class="hack-btn" onclick="playBreach('55')">55</button>
-                    <button class="hack-btn" onclick="playBreach('E9')">E9</button>
-                    <button class="hack-btn" onclick="playBreach('00')">00</button>
-                    <button class="hack-btn" onclick="playBreach('FF')">FF</button>
-                    <button class="hack-btn" onclick="playBreach('F0')">F0</button>
-                    <button class="hack-btn" onclick="playBreach('A3')">A3</button>
-                    <button class="hack-btn" onclick="playBreach('99')">99</button>
-                </div>
-            </div>
-        </section>
-
         <section class="grid-2">
             
-            <div class="glass-card" id="form-card">
-                <h2 class="text-gradient-purple" style="margin-bottom: 24px; font-weight: 600;">System Overrides</h2>
+            <div class="glass-card glass-card-cyan" id="breach-card">
+                <div class="flex-row" style="justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h2 class="text-gradient-cyan font-mono" style="margin: 0;"><i class="fa-solid fa-terminal"></i> Breach Protocol</h2>
+                    <span class="badge badge-new" id="breach-timer">Versuche: 4</span>
+                </div>
                 
-                <form class="flex-col" id="override-form" onsubmit="event.preventDefault(); runInjection();">
-                    <div>
-                        <label class="font-mono" style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.85rem;">TARGET CORE SELECT</label>
-                        <select class="select-glass" id="target-select" onchange="triggerSfx('select')">
-                            <option value="mainframe">Mainframe Hub Alpha</option>
-                            <option value="subgrid">Sub-Grid Relay Beta</option>
-                            <option value="orbital">Orbital Platform Gamma</option>
-                        </select>
+                <p style="color: var(--text-secondary); font-size: 0.85rem;">
+                    Bewege dich abwechselnd horizontal (Start in Zeile 1) und vertikal. Rekonstruiere den Ziel-Code!
+                </p>
+
+                <div class="flex-col" style="gap: 8px; margin-top: 12px;">
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">ZIEL-REIHENFOLGE:</div>
+                    <div class="sequence-display font-mono text-neon-cyan" id="target-sequence">55 &gt; E9 &gt; BD</div>
+                    
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">DEIN BUFFER:</div>
+                    <div class="sequence-display font-mono text-neon-pink" id="buffer-sequence">-- &gt; -- &gt; --</div>
+                </div>
+
+                <div class="breach-matrix" id="matrix-grid">
                     </div>
 
-                    <div>
-                        <label class="font-mono" style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.85rem;">ENCRYPTION PHRASE</label>
-                        <input type="text" class="input-glass" id="encryption-input" placeholder="Enter secure payload string..." onkeydown="triggerSfx('type')">
-                    </div>
-
-                    <div>
-                        <label class="font-mono" style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.85rem;">COMPILED SHELL INSTRUCTIONS</label>
-                        <textarea class="textarea-glass textarea-mono" id="console-log" placeholder="/* Custom shell scripting environment */&#10;System logs will record overrides here..." readonly></textarea>
-                    </div>
-
-                    <div class="flex-row" style="justify-content: space-between;">
-                        <button type="submit" class="btn btn-gradient" id="btn-inject">
-                            <span>Initialize Override</span>
-                        </button>
-                        <button type="button" class="btn btn-outline-pink" onclick="clearTerminal()">
-                            <span>Purge Logs</span>
-                        </button>
-                    </div>
-                </form>
+                <button class="btn btn-outline-pink" style="margin-top: 15px; width: 100%;" onclick="initBreachGame()">
+                    <span>Matrix neu generieren</span>
+                </button>
             </div>
 
-            <div class="glass-card flex-col" style="justify-content: space-between;" id="analytics-card">
-                <div>
-                    <h2 class="text-neon-cyan" style="margin-bottom: 5px; font-weight: 600;">Signal Oszilloskop</h2>
-                    <canvas id="osc-canvas" style="width: 100%; height: 80px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle); border-radius: 4px; margin-bottom: 15px;"></canvas>
+            <div class="glass-card glass-card-purple" id="simon-card">
+                <div class="flex-row" style="justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h2 class="text-gradient-purple font-mono" style="margin: 0;"><i class="fa-solid fa-network-wired"></i> Node Decryption</h2>
+                    <span class="badge badge-pro" id="simon-score">Score: 0</span>
                 </div>
 
-                <div class="glass-panel-frosted flex-col">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span class="font-mono" style="font-size: 0.85rem;">WAVE FREQUENCY</span>
-                        <span class="text-neon-pink font-mono" id="bandwidth-val" style="font-size: 0.85rem; font-weight: bold;">75%</span>
-                    </div>
-                    <input type="range" class="range-glass" min="5" max="100" value="75" id="bandwidth-slider">
+                <p style="color: var(--text-secondary); font-size: 0.85rem;">
+                    Merke dir das Leuchtmuster der Nodes und klicke sie in derselben Reihenfolge an, um die Firewall zu überlasten.
+                </p>
 
-                    <div class="progress-container" style="margin-top: 10px;">
-                        <div class="progress-bar" id="bandwidth-progress" style="width: 75%;"></div>
-                    </div>
+                <div class="node-grid">
+                    <button class="node-btn" data-node="0" onclick="playerNodeClick(0)"></button>
+                    <button class="node-btn" data-node="1" onclick="playerNodeClick(1)"></button>
+                    <button class="node-btn" data-node="2" onclick="playerNodeClick(2)"></button>
+                    <button class="node-btn" data-node="3" onclick="playerNodeClick(3)"></button>
+                    <button class="node-btn" data-node="4" onclick="playerNodeClick(4)"></button>
+                    <button class="node-btn" data-node="5" onclick="playerNodeClick(5)"></button>
+                    <button class="node-btn" data-node="6" onclick="playerNodeClick(6)"></button>
+                    <button class="node-btn" data-node="7" onclick="playerNodeClick(7)"></button>
+                    <button class="node-btn" data-node="8" onclick="playerNodeClick(8)"></button>
                 </div>
 
-                <div class="glass-panel-frosted flex-row" style="justify-content: space-between;">
-                    <div class="flex-col" style="gap: 4px;">
-                        <span style="font-weight: 600; font-size: 0.95rem;">Stealth Cloaking</span>
-                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Mask client routing protocols</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked id="stealth-toggle" onchange="toggleStealthMode(this)">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-
-                <div class="keyboard-badge font-mono">
-                    🎹 KEYBOARD SYNTH ACTIVE: Press keys <strong>A, S, D, F, G, H, J</strong> to synthesize cyber tones!
-                </div>
-
-                <div class="glass-panel-frosted flex-row" style="justify-content: space-between; background: rgba(255, 0, 127, 0.05); border-color: rgba(255, 0, 127, 0.2);">
-                    <div class="flex-col">
-                        <span style="font-weight: 600; font-size: 0.95rem; color: var(--accent-pink);">REACTOR INJECTOR</span>
-                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Simulate high load terminal decay</span>
-                    </div>
-                    <button class="btn btn-outline-pink" id="btn-overload" onclick="triggerEmergency()" style="padding: 6px 14px;">
-                        <span>OVERLOAD</span>
-                    </button>
-                </div>
+                <button class="btn btn-purple" style="margin-top: 15px; width: 100%;" onclick="startSimonGame()">
+                    <span>Firewall-Bypass starten</span>
+                </button>
             </div>
 
+        </section>
+
+        <section class="glass-card" style="margin-top: 20px;">
+            <h3 class="font-mono text-neon-pink" style="font-size: 0.9rem; margin-bottom: 8px;">Netrunner Live Logs</h3>
+            <textarea id="arcade-logs" class="textarea-glass textarea-mono" style="height: 100px; font-size: 0.8rem;" readonly>/* Terminal initialisiert. Wähle ein Spiel, um Daten-Injektionen vorzunehmen... */</textarea>
         </section>
 
     </div>
 
     <script>
-        // --- Web Audio API Sound Synthesizer (Sci-Fi Audio Engine) ---
+        // --- Web Audio Synth für stilechte Gaming-SFX ---
         let audioCtx = null;
-
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        // Custom Sound Effects Playback
-        function triggerSfx(type, customFreq = null) {
-            initAudio();
-            if (!audioCtx) return;
-
+        function playSfx(type) {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let osc = audioCtx.createOscillator();
-            let gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
             let now = audioCtx.currentTime;
-
-            if (customFreq) {
-                // Synthesizer Keypresses
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(customFreq, now);
-                gainNode.gain.setValueAtTime(0.12, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-                osc.start(now);
-                osc.stop(now + 0.4);
-                return;
-            }
 
             if (type === 'click') {
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(900, now);
-                osc.frequency.exponentialRampToValueAtTime(1400, now + 0.07);
-                gainNode.gain.setValueAtTime(0.12, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.07);
-                osc.start(now);
-                osc.stop(now + 0.07);
-            } 
-            else if (type === 'success') {
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.start(now); osc.stop(now + 0.08);
+            } else if (type === 'node') {
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(440, now); 
-                osc.frequency.setValueAtTime(554.37, now + 0.08); 
-                osc.frequency.setValueAtTime(659.25, now + 0.16); 
-                osc.frequency.setValueAtTime(880, now + 0.24); 
-                gainNode.gain.setValueAtTime(0.15, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.005, now + 0.55);
-                osc.start(now);
-                osc.stop(now + 0.55);
-            } 
-            else if (type === 'fail') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(180, now);
-                osc.frequency.linearRampToValueAtTime(90, now + 0.35);
-                gainNode.gain.setValueAtTime(0.2, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-                osc.start(now);
-                osc.stop(now + 0.35);
-            }
-            else if (type === 'type') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(160, now);
-                gainNode.gain.setValueAtTime(0.04, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
-                osc.start(now);
-                osc.stop(now + 0.03);
-            }
-            else if (type === 'select') {
+                osc.frequency.setValueAtTime(440, now);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.start(now); osc.stop(now + 0.25);
+            } else if (type === 'success') {
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(300, now);
-                osc.frequency.exponentialRampToValueAtTime(600, now + 0.1);
-                gainNode.gain.setValueAtTime(0.08, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-                osc.start(now);
-                osc.stop(now + 0.1);
-            }
-            else if (type === 'alarm') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(783.99, now); 
-                osc.frequency.setValueAtTime(659.25, now + 0.15); 
-                gainNode.gain.setValueAtTime(0.07, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.32);
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+                osc.start(now); osc.stop(now + 0.45);
+            } else if (type === 'fail') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(80, now + 0.4);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start(now); osc.stop(now + 0.4);
             }
         }
 
-        // Keyboard Event Listener for Live Synthesizer
-        const synthNotes = {
-            'KeyA': 261.63, // C4
-            'KeyS': 293.66, // D4
-            'KeyD': 329.63, // E4
-            'KeyF': 349.23, // F4
-            'KeyG': 392.00, // G4
-            'KeyH': 440.00, // A4
-            'KeyJ': 493.88  // B4
-        };
-
-        window.addEventListener('keydown', (e) => {
-            if (synthNotes[e.code]) {
-                // Trigger synthesising note
-                triggerSfx(null, synthNotes[e.code]);
-                writeToTerminal(`[SYNTH] Output Frequency Node: ${synthNotes[e.code]} Hz`);
-            }
-        });
-
-        // --- Live stats loop ---
-        setInterval(() => {
-            const cpu = (Math.random() * 12 + 10).toFixed(1); 
-            const ping = Math.floor(Math.random() * 6 + 10); 
-            document.getElementById('live-cpu').innerText = `${cpu}%`;
-            document.getElementById('live-ping').innerText = `${ping}ms`;
-        }, 1500);
-
-        function triggerCpuSpike() {
-            document.getElementById('live-cpu').innerText = "98.7% (SPIKE)";
-            setTimeout(() => {
-                document.getElementById('live-cpu').innerText = "35.1%";
-            }, 1000);
+        function logEvent(msg) {
+            const logger = document.getElementById('arcade-logs');
+            const time = new Date().toLocaleTimeString();
+            logger.value += `\n[${time}] ${msg}`;
+            logger.scrollTop = logger.scrollHeight;
         }
 
-        // --- Breach Protocol Mini-Game Engine (NEW!) ---
-        let breachSequence = [];
-        function playBreach(code) {
-            triggerSfx('type');
-            breachSequence.push(code);
-            document.getElementById('current-code-input').innerText = breachSequence.join(' -> ');
+        // ==========================================
+        // GAME 1: BREACH PROTOCOL GAME LOGIC
+        // ==========================================
+        const breachMatrixData = [
+            ['1C', '55', 'E9', 'BD'],
+            ['E9', '1C', '55', 'AA'],
+            ['BD', '55', 'AA', '1C'],
+            ['AA', 'BD', 'E9', '55']
+        ];
+        
+        let targetSequence = ['55', 'E9', 'BD'];
+        let playerBuffer = [];
+        let maxAttempts = 4;
+        let attemptsLeft = 4;
+        let selectedRow = 0; // Wir starten immer in der ersten Zeile (Index 0)
+        let selectionMode = 'horizontal'; // Wechselt zwischen 'horizontal' und 'vertical'
+        let usedCells = []; // Array von Indizes "row-col"
 
-            // Check correctness
-            const target = ['55', 'F0', 'FF'];
-            const matchCount = breachSequence.filter((val, index) => val === target[index]).length;
-
-            if (breachSequence.length === 3) {
-                if (breachSequence[0] === '55' && breachSequence[1] === 'F0' && breachSequence[2] === 'FF') {
-                    triggerSfx('success');
-                    writeToTerminal("BREACH SUCCESSFUL: Accessing restricted secure vault hashes.");
-                    createNotification('success', "BREACH PROTOCOL UNLOCKED // Vault accessible.");
-                    
-                    // Trigger visual celebration inside card
-                    const gameCard = document.getElementById('card-game');
-                    gameCard.style.borderColor = "var(--accent-green)";
-                    gameCard.style.boxShadow = "0 0 20px var(--accent-green)";
-                    setTimeout(() => { gameCard.style.borderColor = ""; gameCard.style.boxShadow = ""; }, 2000);
-                } else {
-                    triggerSfx('fail');
-                    writeToTerminal("BREACH FAILURE: Bad checksum parameters. Resetting buffer.");
-                    createNotification('warning', "Decryption sequence mismatched. Reset.");
-                    
-                    const gameCard = document.getElementById('card-game');
-                    gameCard.style.borderColor = "var(--accent-pink)";
-                    setTimeout(() => gameCard.style.borderColor = "", 1000);
-                }
-                breachSequence = [];
-                setTimeout(() => document.getElementById('current-code-input').innerText = "--", 1500);
-            }
-        }
-
-        // --- Canvas Oszilloskop Animation Loop (NEW!) ---
-        const canvas = document.getElementById('osc-canvas');
-        const ctx = canvas.getContext('2d');
-        let wavePhase = 0;
-        let waveSpeed = 0.05;
-
-        // Ensure canvas scaling matches layout container width
-        function resizeCanvas() {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = 80;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        function drawWave() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.beginPath();
-            ctx.lineWidth = 2;
+        function initBreachGame() {
+            playerBuffer = [];
+            attemptsLeft = maxAttempts;
+            selectedRow = 0;
+            selectionMode = 'horizontal';
+            usedCells = [];
             
-            // Adjust line color based on overload condition
-            const wrapper = document.getElementById('main-wrapper');
-            if (wrapper.classList.contains('emergency-active')) {
-                ctx.strokeStyle = '#ff007f'; // Emergency Glitch Pink
+            // Zufällige Zielsequenz generieren aus den Matrix-Elementen
+            const pool = ['1C', '55', 'E9', 'BD', 'AA'];
+            targetSequence = Array.from({length: 3}, () => pool[Math.floor(Math.random() * pool.length)]);
+            
+            document.getElementById('target-sequence').innerText = targetSequence.join(' > ');
+            document.getElementById('buffer-sequence').innerText = '-- > -- > --';
+            document.getElementById('breach-timer').innerText = `Versuche: ${attemptsLeft}`;
+            document.getElementById('breach-timer').className = "badge badge-new";
+
+            renderMatrix();
+            logEvent("BREACH PROTOCOL: Neues Hacking-Feld generiert. Starte in Zeile 1.");
+        }
+
+        function renderMatrix() {
+            const grid = document.getElementById('matrix-grid');
+            grid.innerHTML = '';
+
+            for (let r = 0; r < 4; r++) {
+                for (let c = 0; c < 4; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'matrix-cell';
+                    cell.innerText = breachMatrixData[r][c];
+                    
+                    const cellId = `${r}-${c}`;
+                    const isUsed = usedCells.includes(cellId);
+
+                    // Markiere genutzte Zellen
+                    if (isUsed) {
+                        cell.classList.add('used');
+                    } else {
+                        // Markiere Zellen, die gerade aktiv wählbar sind
+                        if (selectionMode === 'horizontal' && r === selectedRow) {
+                            cell.classList.add('active-line');
+                        } else if (selectionMode === 'vertical' && c === selectedRow) { // "selectedRow" hält im vertikalen Modus die ausgewählte Spalte
+                            cell.classList.add('active-line');
+                        }
+                    }
+
+                    cell.onclick = () => {
+                        if (isUsed) return;
+                        
+                        // Nur erlauben, wenn die Zelle zur aktuellen Zeile/Spalte gehört
+                        if (selectionMode === 'horizontal' && r === selectedRow) {
+                            selectCell(r, c);
+                        } else if (selectionMode === 'vertical' && c === selectedRow) {
+                            selectCell(r, c);
+                        }
+                    };
+
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function selectCell(r, c) {
+            playSfx('click');
+            const val = breachMatrixData[r][c];
+            playerBuffer.push(val);
+            usedCells.push(`${r}-${c}`);
+
+            // Buffer-Visualisierung aktualisieren
+            let visualBuffer = [...playerBuffer];
+            while (visualBuffer.length < 3) visualBuffer.push('--');
+            document.getElementById('buffer-sequence').innerText = visualBuffer.join(' > ');
+
+            attemptsLeft--;
+            document.getElementById('breach-timer').innerText = `Versuche: ${attemptsLeft}`;
+
+            // Ziel erreicht überprüfen
+            const isMatch = playerBuffer.every((v, i) => v === targetSequence[i]);
+
+            if (playerBuffer.length === 3) {
+                if (isMatch) {
+                    playSfx('success');
+                    logEvent("BREACH ERFOLGREICH! Daten-Integrität kompromittiert.");
+                    document.getElementById('breach-timer').innerText = "SYSTEM CRACKED";
+                    document.getElementById('breach-timer').className = "badge badge-pro";
+                } else {
+                    playSfx('fail');
+                    logEvent("BREACH FEHLGESCHLAGEN: Code-Muster ungültig.");
+                    document.getElementById('breach-timer').innerText = "TIMEOUT/FAIL";
+                }
+                // Sperre Matrix nach Ende des Spiels
+                selectionMode = 'none';
+                renderMatrix();
+                return;
+            }
+
+            if (attemptsLeft === 0) {
+                playSfx('fail');
+                logEvent("BREACH FEHLGESCHLAGEN: Keine Versuche übrig.");
+                selectionMode = 'none';
+                renderMatrix();
+                return;
+            }
+
+            // Modus für den nächsten Schritt wechseln und Koordinaten anpassen
+            if (selectionMode === 'horizontal') {
+                selectionMode = 'vertical';
+                selectedRow = c; // Im vertikalen Modus ist das nächste Ziel die Spalte c
+                logEvent(`Spalten-Wahl aktiviert. Wähle aus Spalte ${c+1}.`);
             } else {
-                ctx.strokeStyle = '#00f0ff'; // Calm Grid Cyan
+                selectionMode = 'horizontal';
+                selectedRow = r; // Im horizontalen Modus ist das nächste Ziel die Zeile r
+                logEvent(`Zeilen-Wahl aktiviert. Wähle aus Zeile ${r+1}.`);
             }
 
-            const scale = parseFloat(slider.value); // Link to slider
-            const frequency = scale / 500;
-            const amplitude = scale / 3;
-
-            for (let x = 0; x < canvas.width; x++) {
-                const y = canvas.height / 2 + Math.sin(x * frequency + wavePhase) * amplitude * Math.sin(x * 0.005);
-                if (x === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            }
-            ctx.stroke();
-
-            // Glitch visual artifact during overload
-            if (wrapper.classList.contains('emergency-active') && Math.random() > 0.8) {
-                ctx.fillStyle = "rgba(255, 0, 127, 0.2)";
-                ctx.fillRect(0, Math.random() * canvas.height, canvas.width, 10);
-            }
-
-            wavePhase += waveSpeed;
-            requestAnimationFrame(drawWave);
+            renderMatrix();
         }
-        requestAnimationFrame(drawWave);
 
-        // --- UI Slider Dynamics ---
-        const slider = document.getElementById('bandwidth-slider');
-        const bar = document.getElementById('bandwidth-progress');
-        const text = document.getElementById('bandwidth-val');
-        const consoleLog = document.getElementById('console-log');
-        const alertContainer = document.getElementById('alert-container');
+        // ==========================================
+        // GAME 2: SIMON SAYS / NODE DECRYPTION LOGIC
+        // ==========================================
+        let simonSequence = [];
+        let playerSequence = [];
+        let simonScore = 0;
+        let isCpuPlaying = false;
 
-        slider.addEventListener('input', (e) => {
-            const value = e.target.value;
-            bar.style.width = value + '%';
-            text.innerText = value + '%';
-            triggerSfx('type');
-            waveSpeed = 0.02 + (value / 1000);
-            
-            if (value > 90) {
-                writeToTerminal(`[Oszilloskop] Frequenzüberlagerung detected at: ${value}Hz!`);
-            }
-        });
+        function startSimonGame() {
+            simonSequence = [];
+            playerSequence = [];
+            simonScore = 0;
+            document.getElementById('simon-score').innerText = `Score: ${simonScore}`;
+            logEvent("NODE DECRYPTION: Firewall gestartet. Sequenz wird initialisiert...");
+            nextSimonRound();
+        }
 
-        // Typewriter console logger
-        function writeToTerminal(fullText) {
-            const timestamp = new Date().toLocaleTimeString();
-            const logEntry = `\n[${timestamp}] ${fullText}`;
+        function nextSimonRound() {
+            playerSequence = [];
+            // Zufälligen Node (0 bis 8) hinzufügen
+            simonSequence.push(Math.floor(Math.random() * 9));
+            playSequence();
+        }
+
+        function playSequence() {
+            isCpuPlaying = true;
             let i = 0;
-            
             const interval = setInterval(() => {
-                consoleLog.value += logEntry.charAt(i);
-                consoleLog.scrollTop = consoleLog.scrollHeight;
+                flashNode(simonSequence[i], 'active');
                 i++;
-                if (i % 4 === 0) triggerSfx('type');
-                if (i >= logEntry.length) {
+                if (i >= simonSequence.length) {
                     clearInterval(interval);
+                    isCpuPlaying = false;
+                    logEvent("Wiederhole das Muster...");
                 }
-            }, 8);
-        }
-
-        // Sector Button connects
-        function connectSector(sector, desc) {
-            triggerSfx('click');
-            triggerCpuSpike();
-            writeToTerminal(`Access packet routed to ${sector}... initializing tunnel handshake.`);
-
-            setTimeout(() => {
-                triggerSfx('success');
-                writeToTerminal(`HANDSHAKE COMPLETE: Connected to ${desc}.`);
-                createNotification('success', `${sector} active.`);
             }, 600);
         }
 
-        // Override submission
-        function runInjection() {
-            triggerSfx('click');
-            triggerCpuSpike();
-            const target = document.getElementById('target-select').value;
-            const inputVal = document.getElementById('encryption-input').value || "ANON_TOKEN";
-
-            writeToTerminal(`RUNNING ENCRYPTION OVERRIDE ROUTINE ON: [${target.toUpperCase()}]`);
-            writeToTerminal(`COMPILING PROTOCOLS WITH CRYPTO KEY: "${inputVal}"...`);
-
-            const title = document.getElementById('header-title');
-            title.setAttribute('data-text', 'COMPILE_OVERRIDE...');
-            title.innerText = 'COMPILE_OVERRIDE...';
-
-            setTimeout(() => {
-                triggerSfx('success');
-                writeToTerminal(`ACCESS SECURED: Central core bypassed on ${target}. System active.`);
-                title.setAttribute('data-text', 'NEURAL_NET.OS');
-                title.innerText = 'NEURAL_NET.OS';
-                createNotification('success', `${target} successfully bypassed.`);
-            }, 1500);
-        }
-
-        // Toggle Switch Stealth Mode
-        function toggleStealthMode(checkbox) {
-            triggerSfx('click');
-            const subtitle = document.getElementById('system-status-subtitle');
-            if (checkbox.checked) {
-                writeToTerminal("STEALTH PROTOCOLS: ENGAGED. Proxies randomized.");
-                subtitle.innerText = "Status: Encrypted Tunnel Active // Security Level: Maximum";
-                document.getElementById('node-count-badge').innerText = "Node Secure";
-            } else {
-                triggerSfx('fail');
-                writeToTerminal("CRITICAL RISK: Local IP trace decrypted by corporate gateway scanners.");
-                subtitle.innerText = "Status: Connection EXPOSED // Security Level: COMPROMISED";
-                document.getElementById('node-count-badge').innerText = "IP Exposed";
-                createNotification('warning', "Neural telemetry routing exposed!");
+        function flashNode(index, cssClass) {
+            const btn = document.querySelector(`[data-node="${index}"]`);
+            if (btn) {
+                btn.classList.add(cssClass);
+                playSfx('node');
+                setTimeout(() => {
+                    btn.classList.remove(cssClass);
+                }, 350);
             }
         }
 
-        // Overload Emergency State Toggle (With visual glitching)
-        let alarmInterval = null;
-        function triggerEmergency() {
-            triggerSfx('fail');
-            const wrapper = document.getElementById('main-wrapper');
-            const header = document.getElementById('main-header');
-            const btn = document.getElementById('btn-overload');
+        function playerNodeClick(index) {
+            if (isCpuPlaying) return; // Verhindere Eingaben, während der Computer vorspielt
 
-            if (wrapper.classList.contains('emergency-active')) {
-                wrapper.classList.remove('emergency-active');
-                header.classList.remove('emergency-border');
-                btn.innerText = "OVERLOAD";
-                writeToTerminal("Emergency coolant injected into mainframe cores. Voltage stabilized.");
-                clearInterval(alarmInterval);
-                document.getElementById('live-mem').innerText = "3.8 GB";
-            } else {
-                wrapper.classList.add('emergency-active');
-                header.classList.add('emergency-border');
-                btn.innerText = "STABILIZE";
+            flashNode(index, 'player-active');
+            playerSequence.push(index);
+
+            // Sofortige Prüfung bei jedem Klick
+            const currentIndex = playerSequence.length - 1;
+            if (playerSequence[currentIndex] !== simonSequence[currentIndex]) {
+                playSfx('fail');
+                logEvent(`FIREWALL BLOCK: Fehlerhafter Node bei Schritt ${playerSequence.length}!`);
+                document.getElementById('simon-score').innerText = "BLOCKED";
+                simonSequence = [];
+                return;
+            }
+
+            // Runde erfolgreich beendet?
+            if (playerSequence.length === simonSequence.length) {
+                simonScore++;
+                document.getElementById('simon-score').innerText = `Score: ${simonScore}`;
+                playSfx('success');
+                logEvent(`Sub-Sektor ${simonScore} entschlüsselt. Erhöhe Frequenz.`);
                 
-                writeToTerminal("CRITICAL: Reactor core loop overloaded! Emergency warning triggered!");
-                document.getElementById('live-mem').innerText = "15.8 GB (LIMIT)";
-
-                // Alarm sound loop
-                alarmInterval = setInterval(() => {
-                    triggerSfx('alarm');
-                    writeToTerminal("ALERT: Auto-cooling valves offline. System integrity collapsing!");
+                setTimeout(() => {
+                    nextSimonRound();
                 }, 1000);
             }
         }
 
-        function clearTerminal() {
-            triggerSfx('click');
-            consoleLog.value = "/* Console purge sequence complete. Ready. */";
-        }
-
-        function createNotification(type, text) {
-            const div = document.createElement('div');
-            if (type === 'warning') {
-                div.className = 'alert alert-warning animate-float';
-                div.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <span><strong>Override Alert:</strong> ${text}</span>`;
-            } else {
-                div.className = 'alert alert-success';
-                div.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span><strong>System Event:</strong> ${text}</span>`;
-            }
-            alertContainer.appendChild(div);
-            
-            setTimeout(() => {
-                div.style.transition = "opacity 0.4s ease";
-                div.style.opacity = "0";
-                setTimeout(() => div.remove(), 400);
-            }, 3000);
-        }
-
-        // Initial Welcoming text
+        // Spiele beim Laden der Seite initialisieren
         window.onload = () => {
-            writeToTerminal("Neural Net operating systems initialized. Synth modules connected.");
-        };
+            initBreachGame();
+        }
     </script>
 </body>
 </html>
