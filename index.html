@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Fallback :root definitions as variables were truncated in the original CSS */
+        /* Fallback :root definitions as variables were truncated in the original CSS file [cite: 106, 128] */
         :root {
             --bg-main: #0a040f;
             --bg-panel: #160b22;
@@ -43,18 +43,18 @@
     <div class="utility-wrapper">
         
         <header class="glass-card glass-card-holo animate-float">
-            <h1 class="title-main text-glitch" data-text="NEURAL_NET.OS">NEURAL_NET.OS</h1>
-            <p class="subtitle font-mono">Status: Connected // Security Level: Maximum</p>
+            <h1 class="title-main text-glitch" data-text="NEURAL_NET.OS" id="header-title">NEURAL_NET.OS</h1>
+            <p class="subtitle font-mono" id="system-status-subtitle">Status: Connected // Security Level: Maximum</p>
             
             <div class="flex-row" style="justify-content: center; flex-wrap: wrap;">
                 <span class="badge badge-pro">Enterprise</span>
                 <span class="badge badge-beta">v2.0-Beta</span>
-                <span class="badge badge-new">New Release</span>
+                <span class="badge badge-new" id="active-count-badge">System Ready</span>
             </div>
         </header>
 
-        <section class="flex-col">
-            <div class="alert alert-info">
+        <section class="flex-col" id="alert-container">
+            <div class="alert alert-info" id="sync-alert">
                 <div class="spinner"></div>
                 <span><strong>System Status:</strong> Core database synchronizing with quantum servers.</span>
             </div>
@@ -63,42 +63,37 @@
                 <i class="fa-solid fa-circle-check"></i>
                 <span><strong>Firewall Active:</strong> Intrusions blocked. Decryption keys updated successfully.</span>
             </div>
-            
-            <div class="alert alert-warning">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span><strong>Warning:</strong> High memory consumption detected on sub-sector 4.</span>
-            </div>
         </section>
 
         <section class="grid-3">
-            <div class="glass-card glass-card-pink glass-card-interactive">
+            <div class="glass-card glass-card-pink glass-card-interactive" id="card-sector-a">
                 <h3 class="text-gradient-pink font-mono" style="margin-bottom: 12px;">Sector A</h3>
                 <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
                     Dedicated terminal for monitoring thermal dynamics of localized fusion arrays.
                 </p>
-                <button class="btn btn-pink" style="width: 100%;">
+                <button class="btn btn-pink" style="width: 100%;" onclick="simulateAction('Sector A', 'Thermal core connection initialized. Grid stabilized.')">
                     <span>Connect</span>
                     <i class="fa-solid fa-bolt"></i>
                 </button>
             </div>
 
-            <div class="glass-card glass-card-purple glass-card-interactive animate-pulse">
+            <div class="glass-card glass-card-purple glass-card-interactive animate-pulse" id="card-sector-b">
                 <h3 class="text-gradient-purple font-mono" style="margin-bottom: 12px;">Sector B</h3>
                 <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
                     Active proxy tunneling. Routing neural nodes to bypass corporate sensory firewalls.
                 </p>
-                <button class="btn btn-purple" style="width: 100%;">
+                <button class="btn btn-purple" style="width: 100%;" onclick="simulateAction('Sector B', 'Bypassing corporate node gateways... proxy online!')">
                     <span>Execute</span>
                     <i class="fa-solid fa-terminal"></i>
                 </button>
             </div>
 
-            <div class="glass-card glass-card-cyan glass-card-interactive">
+            <div class="glass-card glass-card-cyan glass-card-interactive" id="card-sector-c">
                 <h3 class="text-gradient-cyan font-mono" style="margin-bottom: 12px;">Sector C</h3>
                 <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
                     Cold storage terminal archiving encrypted system logs and ledger registries.
                 </p>
-                <button class="btn btn-outline-cyan" style="width: 100%;">
+                <button class="btn btn-outline-cyan" style="width: 100%;" onclick="simulateAction('Sector C', 'Reading archive partitions. Ledgers loaded.')">
                     <span>Query DB</span>
                 </button>
             </div>
@@ -109,10 +104,10 @@
             <div class="glass-card">
                 <h2 class="text-gradient-purple" style="margin-bottom: 24px; font-weight: 600;">System Overrides</h2>
                 
-                <form class="flex-col" onsubmit="event.preventDefault();">
+                <form class="flex-col" id="override-form" onsubmit="event.preventDefault(); submitOverrideForm();">
                     <div>
                         <label class="font-mono" style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.85rem;">TARGET CORE SELECT</label>
-                        <select class="select-glass">
+                        <select class="select-glass" id="target-select">
                             <option value="mainframe">Mainframe Hub Alpha</option>
                             <option value="subgrid">Sub-Grid Relay Beta</option>
                             <option value="orbital">Orbital Platform Gamma</option>
@@ -121,19 +116,19 @@
 
                     <div>
                         <label class="font-mono" style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.85rem;">ENCRYPTION PHRASE</label>
-                        <input type="text" class="input-glass" placeholder="Enter secure string...">
+                        <input type="text" class="input-glass" id="encryption-input" placeholder="Enter secure string...">
                     </div>
 
                     <div>
                         <label class="font-mono" style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.85rem;">COMPILED SHELL INSTRUCTIONS</label>
-                        <textarea class="textarea-glass textarea-mono" placeholder="/* Custom shell scripting environment */&#10;sudo execute-net-run --bypass --target=0x0F29"></textarea>
+                        <textarea class="textarea-glass textarea-mono" id="console-log" placeholder="/* Custom shell scripting environment */&#10;System logs will record overrides here..." readonly></textarea>
                     </div>
 
                     <div class="flex-row" style="justify-content: space-between;">
                         <button type="submit" class="btn btn-gradient">
                             <span>Initialize Routine</span>
                         </button>
-                        <button type="reset" class="btn btn-outline-pink">
+                        <button type="button" class="btn btn-outline-pink" onclick="clearTerminal()">
                             <span>Purge Logs</span>
                         </button>
                     </div>
@@ -166,7 +161,7 @@
                         <span style="font-size: 0.8rem; color: var(--text-secondary);">Mask client routing protocols</span>
                     </div>
                     <label class="switch">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" checked id="stealth-toggle" onchange="toggleStealthMode(this)">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -192,12 +187,120 @@
         const slider = document.getElementById('bandwidth-slider');
         const bar = document.getElementById('bandwidth-progress');
         const text = document.getElementById('bandwidth-val');
+        const consoleLog = document.getElementById('console-log');
+        const activeCountBadge = document.getElementById('active-count-badge');
+        const alertContainer = document.getElementById('alert-container');
 
+        // Dynamic slider to progress-bar connection
         slider.addEventListener('input', (e) => {
             const value = e.target.value;
             bar.style.width = value + '%';
             text.innerText = value + '%';
+            
+            // Add custom logs based on intensity
+            if (value > 90) {
+                logMessage(`WARNING: Bandwidth capacity high (${value}%). Signal integrity may degrade.`);
+            }
         });
+
+        // Logger helper function
+        function logMessage(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            consoleLog.value += `[${timestamp}] ${message}\n`;
+            consoleLog.scrollTop = consoleLog.scrollHeight; // Auto-scroll to bottom
+        }
+
+        // Action simulator for Sector Buttons
+        function simulateAction(sector, successMsg) {
+            logMessage(`Executing query sequence to ${sector}...`);
+            
+            // Simulate visual feedback on the corresponding card
+            let cardId = sector === 'Sector A' ? 'card-sector-a' : (sector === 'Sector B' ? 'card-sector-b' : 'card-sector-c');
+            let card = document.getElementById(cardId);
+            
+            // Add an intense purple pulse flare animation temporarily
+            card.style.transform = "scale(1.02) translateY(-8px)";
+            card.style.borderColor = "var(--accent-pink)";
+            
+            setTimeout(() => {
+                card.style.transform = "";
+                card.style.borderColor = "";
+                logMessage(`SUCCESS: ${successMsg}`);
+                createTemporaryAlert('success', `Connection to ${sector} successfully established.`);
+            }, 800);
+        }
+
+        // Override Form submission simulator
+        function submitOverrideForm() {
+            const target = document.getElementById('target-select').value;
+            const key = document.getElementById('encryption-input').value || "NO_PHRASE_SPECIFIED";
+            
+            logMessage(`INITIATING COMMAND INJECTION...`);
+            logMessage(`Target Core Selected: ${target.toUpperCase()}`);
+            logMessage(`Payload Key: "${key}"`);
+            
+            // Simulate a system load glitch state
+            const header = document.getElementById('header-title');
+            header.classList.add('text-glitch');
+            header.setAttribute('data-text', 'OVERRIDE_RUNNING...');
+            header.innerText = 'OVERRIDE_RUNNING...';
+
+            setTimeout(() => {
+                logMessage(`CRITICAL: Access bypass injection complete on ${target}.`);
+                header.setAttribute('data-text', 'NEURAL_NET.OS');
+                header.innerText = 'NEURAL_NET.OS';
+                createTemporaryAlert('warning', `Bypass keys injected into ${target}. Verify parameters.`);
+            }, 1200);
+        }
+
+        // Stealth Cloaking switch behavior simulator
+        function toggleStealthMode(checkbox) {
+            const subtitle = document.getElementById('system-status-subtitle');
+            if (checkbox.checked) {
+                logMessage("Stealth Cloaking Protocols: ACTIVE. Proxy routes randomized.");
+                subtitle.innerText = "Status: Encrypted Tunnel Active // Security Level: Maximum";
+                activeCountBadge.innerText = "Cloak Enabled";
+                activeCountBadge.className = "badge badge-pro";
+            } else {
+                logMessage("WARNING: Stealth Cloaking Protocols: DEACTIVATED. Local IP visible.");
+                subtitle.innerText = "Status: Connected // Security Level: COMPROMISED";
+                activeCountBadge.innerText = "Vulnerable";
+                activeCountBadge.className = "badge badge-new";
+                createTemporaryAlert('warning', "Stealth Cloaking deactivated! Neural signature exposed.");
+            }
+        }
+
+        // Clear terminal log simulator
+        function clearTerminal() {
+            consoleLog.value = "/* Purge complete. Terminal cleared. Ready. */\n";
+        }
+
+        // Creates a temporary Cyberpunk alert badge dynamically
+        function createTemporaryAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            
+            if (type === 'warning') {
+                alertDiv.className = 'alert alert-warning animate-float';
+                alertDiv.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <span><strong>Override Notice:</strong> ${message}</span>`;
+            } else {
+                alertDiv.className = 'alert alert-success';
+                alertDiv.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span><strong>Network Notice:</strong> ${message}</span>`;
+            }
+            
+            alertContainer.appendChild(alertDiv);
+            
+            // Auto fade-out and remove alert after 4 seconds
+            setTimeout(() => {
+                alertDiv.style.transition = "opacity 0.5s ease";
+                alertDiv.style.opacity = "0";
+                setTimeout(() => alertDiv.remove(), 500);
+            }, 4000);
+        }
+
+        // Write a welcoming statement to the simulated terminal upon load
+        window.onload = () => {
+            logMessage("System initialized. Welcome back, agent.");
+        };
     </script>
 </body>
 </html>
